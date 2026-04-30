@@ -19,11 +19,11 @@ while True:
         continue
 
     if n == 1:
-        movimentacoes.cadastrar_receitas()
+        movimentacoes.cadastrar_movimentacoes("Receita")
 
     elif n == 2: 
-        movimentacoes.cadastrar_gastos()
-
+        movimentacoes.cadastrar_movimentacoes("Gastos")
+    
     elif n == 3:
         movimentacoes.listar_movimentacoes()
 
@@ -36,7 +36,7 @@ while True:
     elif n == 6:
         movimentacoes.movimentacao_data()
 
-    elif n == 0
+    elif n == 0:
         print('FINALIZANDO SERVIÇOS.....')
         print('ENCERRADO!')
         break
