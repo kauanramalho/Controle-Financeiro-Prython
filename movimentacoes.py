@@ -1,4 +1,5 @@
 from datetime import datetime
+from tabulate import tabulate 
 movimentacoes = []
 categoria = 0
 
@@ -46,9 +47,27 @@ def cadastrar_movimentacoes(tipo):
                          "valor": valor,
                          "categoria": categoria, 
                          "data": data})
-    #Só para testar a main
+    
 def listar_movimentacoes():
-    pass
+    tabela = [] #Tabela para organizar os dados brutos da lista movimentacoes
+    for i, m in enumerate(movimentacoes, start=1):
+        tabela.append([
+                        i,
+                        m["tipo"],
+                        m["descricao"],
+                        f'{m["valor"]:.2f}',
+                        m["categoria"],
+                        m["data"]
+        ])
+
+        cabecalho = ["ID", "Tipo", "Descrição", "Valor", "Categoria", "Data"]
+
+    print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
+    # usa a biblioteca tabulate para exibir a tabela
+    # tabela = dados (linhas)
+    # headers = nomes das colunas
+    # tablefmt = define o formato visual da tabela
+
 def ver_saldo():
     pass
 def saldo_cadegoria():
