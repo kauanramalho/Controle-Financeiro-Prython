@@ -20,9 +20,17 @@ while True:
 
     if n == 1:
         movimentacoes.cadastrar_movimentacoes("Receita")
+        #Teste para imprimir Lista
+        print('============================')
+        print(movimentacoes)
+        print('============================')
 
     elif n == 2: 
         movimentacoes.cadastrar_movimentacoes("Gastos")
+        #Teste para imprimir Lista
+        print('============================')
+        print(movimentacoes)
+        print('============================')
     
     elif n == 3:
         movimentacoes.listar_movimentacoes()

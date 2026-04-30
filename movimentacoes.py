@@ -46,6 +46,15 @@ def cadastrar_movimentacoes(tipo):
                          "valor": valor,
                          "categoria": categoria, 
                          "data": data})
+    #Só para testar a main
+def listar_movimentacoes():
+    pass
+def ver_saldo():
+    pass
+def saldo_cadegoria():
+    pass
+def movimentacao_data():
+    pass
     
     print('CADASTRO SALVO!')
 
