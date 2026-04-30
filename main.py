@@ -7,7 +7,7 @@ while True:
     print('2 - Cadastrar gasto')
     print('3 - Listar movimentações')
     print('4 - Ver saldo atual')
-    print('5 - Ver gastos por categori')
+    print('5 - Ver gastos por categorias')
     print('6 - Buscar movimentação por data')
     print('0 - Sair')
     print('============================')
