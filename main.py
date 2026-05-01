@@ -16,7 +16,7 @@ while True:
     print('5 - Ver gastos por categorias')
     print('6 - Buscar movimentação por data')
     print('0 - Sair')
-    print('============================')
+    print('==================================')
 
     try:
         n = int(input('Escolha uma opção: '))

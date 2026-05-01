@@ -49,7 +49,7 @@ def cadastrar_movimentacoes(tipo):
     
     data = str(input('-> Insira a data (dd/mm/aa): '))
     if data == "":
-        data = datetime.now().strftime("%d/%m/%Y")
+        data = datetime.now().strftime("%d/%m/%Y") #Atribui a Data de Hoje se data ficar vazia
 
     movimentacoes.append({"tipo": tipo,
                          "descricao": descricao,
@@ -83,19 +83,19 @@ def ver_saldo():
 
     for m in movimentacoes:
         if m["tipo"] == "Receita":
-            m["tipo"] += m["valor"]
+            total_receita += m["valor"] 
 
         elif m["tipo"] == "Gastos":
-            m["tipo"] += m["valor"]
+            total_gasto += m["valor"] 
 
         else:
-            print(f'Tipo invalido encontrado: {m["tipo"] ', Valor:' m["valor"]}')
+            print(f'Tipo invalido encontrado: {m["tipo"]}, Valor: {m["valor"]}')
 
     saldo = total_receita - total_gasto
 
-    print(f'Valor de Receita Total: {total_receita:.2f}')
-    print(f'Valor de Gasto Total: {total_gasto:.2f}')
-    print(f'Saldo Total Restante: {saldo:.2f}')
+    print(f'\n-> Valor de Receita Total: {total_receita:.2f}')
+    print(f'-> Valor de Gasto Total: {total_gasto:.2f}')
+    print(f'-> SALDO TOTAL RESTANTE: {saldo:.2f}\n')
 
     
 def saldo_cadegoria():
