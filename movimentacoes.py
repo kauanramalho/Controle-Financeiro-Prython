@@ -12,7 +12,12 @@ def cadastrar_movimentacoes(tipo):
     print('3 - Lazer')
     print('4 - Contas')
     print("--------------------")
-    categoria_opcoes = int(input('-> Selecione Categoria: '))
+    
+    try:
+        categoria_opcoes = int(input('-> Selecione Categoria: '))
+    except ValueError:
+        print('Digite apenas Numeros interios.')
+        return
     
     if categoria_opcoes == 1:
         categoria = "Alimentação"
@@ -31,8 +36,12 @@ def cadastrar_movimentacoes(tipo):
         print('Insira uma Descrição!')
         descricao = str(input('-> Descrição de gasto: '))
         
+    try:
+        valor = float(input('-> Valor: ').replace(",","."))
+    except ValueError:
+        print('"Valor invalido. Digite apenas números!') 
+        return
     
-    valor = float(input('-> Valor: '))
     while valor < 0:
         print('Valores NEGATIVOS não são permitidos')
         print('Digite valores >= 0')
@@ -69,7 +78,26 @@ def listar_movimentacoes():
     # tablefmt = define o formato visual da tabela
 
 def ver_saldo():
-    pass
+    total_receita = 0
+    total_gasto = 0
+
+    for m in movimentacoes:
+        if m["tipo"] == "Receita":
+            m["tipo"] += m["valor"]
+
+        elif m["tipo"] == "Gastos":
+            m["tipo"] += m["valor"]
+
+        else:
+            print(f'Tipo invalido encontrado: {m["tipo"] ', Valor:' m["valor"]}')
+
+    saldo = total_receita - total_gasto
+
+    print(f'Valor de Receita Total: {total_receita:.2f}')
+    print(f'Valor de Gasto Total: {total_gasto:.2f}')
+    print(f'Saldo Total Restante: {saldo:.2f}')
+
+    
 def saldo_cadegoria():
     pass
 def movimentacao_data():

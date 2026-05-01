@@ -4,6 +4,12 @@ while True:
     n = 0
     print ('====== CONTROLE FINANCEIRO ======')
     print('1 - Cadastrar Receita')
+    # TODO: Ajustar lógica de categorias
+    # Atualmente, receitas estão usando as mesmas categorias de gastos (alimentação, transporte, etc.),
+    # o que não faz sentido. No futuro, separar melhor:
+    # - Receita: não precisa de categoria ou usar apenas uma padrão (ex: "Receita" ou "Salário")
+    # - Gasto: manter categorias como alimentação, transporte, lazer, contas, etc.
+    # Atualizar a função cadastrar_movimentacao para tratar isso de forma diferente.
     print('2 - Cadastrar gasto')
     print('3 - Listar movimentações')
     print('4 - Ver saldo atual')
