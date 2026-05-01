@@ -37,7 +37,7 @@ while True:
         movimentacoes.ver_saldo()
 
     elif n == 5:
-        movimentacoes.saldo_cadegoria()
+        movimentacoes.gasto_cadegoria()
 
     elif n == 6:
         movimentacoes.movimentacao_data()

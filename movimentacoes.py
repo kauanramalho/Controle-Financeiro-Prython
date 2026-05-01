@@ -32,9 +32,10 @@ def cadastrar_movimentacoes(tipo):
         return
 
     descricao = str(input('-> Descrição de gasto: '))
+    
     while descricao == "":
         print('Insira uma Descrição!')
-        descricao = str(input('-> Descrição de gasto: '))
+        descricao = str(input('-> Descrição: '))
         
     try:
         valor = float(input('-> Valor: ').replace(",","."))
@@ -50,6 +51,8 @@ def cadastrar_movimentacoes(tipo):
     data = str(input('-> Insira a data (dd/mm/aa): '))
     if data == "":
         data = datetime.now().strftime("%d/%m/%Y") #Atribui a Data de Hoje se data ficar vazia
+    
+    print('\nCADASTRO SALVO!')
 
     movimentacoes.append({"tipo": tipo,
                          "descricao": descricao,
@@ -69,7 +72,7 @@ def listar_movimentacoes():
                         m["data"]
         ])
 
-        cabecalho = ["ID", "Tipo", "Descrição", "Valor", "Categoria", "Data"]
+        cabecalho = ["ID", "Tipo", "Descrição", "Valor(R$)", "Categoria", "Data"]
 
     print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
     # usa a biblioteca tabulate para exibir a tabela
@@ -93,16 +96,38 @@ def ver_saldo():
 
     saldo = total_receita - total_gasto
 
-    print(f'\n-> Valor de Receita Total: {total_receita:.2f}')
-    print(f'-> Valor de Gasto Total: {total_gasto:.2f}')
-    print(f'-> SALDO TOTAL RESTANTE: {saldo:.2f}\n')
+    print(f'\n-> Valor de Receita Total: R${total_receita:.2f}')
+    print(f'-> Valor de Gasto Total: R${total_gasto:.2f}')
+    print(f'-> SALDO TOTAL RESTANTE: R${saldo:.2f}\n')
 
     
-def saldo_cadegoria():
-    pass
+def gasto_cadegoria():
+    gasto_alimentacao = 0
+    gasto_transporte = 0
+    gasto_lazer = 0
+    gasto_contas = 0
+
+    for m in movimentacoes:
+        if m["categoria"] == "Alimetação":
+            gasto_alimentacao += m["valor"]
+
+        elif m["categoria"] == "Transporte":
+            gasto_transporte += m["valor"]
+
+        elif m["categoria"] == "Lazer":
+            gasto_lazer += m["valor"]
+
+        elif m["categoria"] == "Contas":
+            gasto_contas += m["valor"]
+
+    print(f'\n-> Total gasto com ALIMENTAÇÃO: R${gasto_alimentacao:.2f}')
+    print(f'-> Total gasto com TRANSPORTE: R${gasto_transporte:.2f}')
+    print(f'-> Total gasto com LAZER: R${gasto_lazer:.2f}')
+    print(f'-> Total gasto com CONTAS: R${gasto_contas:.2f}\n')
+
+    
 def movimentacao_data():
     pass
     
-    print('CADASTRO SALVO!')
 
 
