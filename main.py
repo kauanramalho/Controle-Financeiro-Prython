@@ -31,7 +31,7 @@ while True:
         movimentacoes.cadastrar_movimentacoes("Gastos")
     
     elif n == 3:
-        movimentacoes.listar_movimentacoes()
+        movimentacoes.listar_movimentacao()
 
     elif n == 4:
         movimentacoes.ver_saldo()

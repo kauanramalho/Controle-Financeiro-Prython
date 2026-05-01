@@ -1,5 +1,6 @@
 from datetime import datetime
 from tabulate import tabulate 
+
 movimentacoes = []
 categoria = 0
 
@@ -31,7 +32,7 @@ def cadastrar_movimentacoes(tipo):
         print('Opação invalida!')
         return
 
-    descricao = str(input('-> Descrição de gasto: '))
+    descricao = str(input('-> Descrição: '))
     
     while descricao == "":
         print('Insira uma Descrição!')
@@ -44,13 +45,14 @@ def cadastrar_movimentacoes(tipo):
         return
     
     while valor < 0:
-        print('Valores NEGATIVOS não são permitidos')
+        print('Valores NEGATIVOS não são permitido.')
         print('Digite valores >= 0')
         valor = float(input('-> Valor: '))
     
-    data = str(input('-> Insira a data (dd/mm/aa): '))
+    data = str(input('-> Insira a data (dd/mm/yyyy): '))
     if data == "":
-        data = datetime.now().strftime("%d/%m/%Y") #Atribui a Data de Hoje se data ficar vazia
+        data = datetime.now().strftime("%d/%m/%Y") 
+        #Atribui a Data de Hoje se data ficar vazia
     
     print('\nCADASTRO SALVO!')
 
@@ -60,14 +62,14 @@ def cadastrar_movimentacoes(tipo):
                          "categoria": categoria, 
                          "data": data})
     
-def listar_movimentacoes():
+def listar_movimentacao():
     tabela = [] #Tabela para organizar os dados brutos da lista movimentacoes
-    for i, m in enumerate(movimentacoes, start=1):
+    for i, m in enumerate(movimentacoes, start = 1):
         tabela.append([
                         i,
                         m["tipo"],
                         m["descricao"],
-                        f'{m["valor"]:.2f}',
+                        f'R${m["valor"]:.2f}',
                         m["categoria"],
                         m["data"]
         ])
@@ -99,6 +101,7 @@ def ver_saldo():
     print(f'\n-> Valor de Receita Total: R${total_receita:.2f}')
     print(f'-> Valor de Gasto Total: R${total_gasto:.2f}')
     print(f'-> SALDO TOTAL RESTANTE: R${saldo:.2f}\n')
+    #Atualização: Quando o saldo der negativo, impreimir uma mensagem diferente
 
     
 def gasto_cadegoria():
@@ -106,9 +109,10 @@ def gasto_cadegoria():
     gasto_transporte = 0
     gasto_lazer = 0
     gasto_contas = 0
+    #Atualização: Receitas estou vindo para ca, e sao somadas junto como se fossem gastos
 
     for m in movimentacoes:
-        if m["categoria"] == "Alimetação":
+        if m["categoria"] == "Alimetação": #Atualizar: Os valores nao sao somados aqui
             gasto_alimentacao += m["valor"]
 
         elif m["categoria"] == "Transporte":
@@ -127,7 +131,39 @@ def gasto_cadegoria():
 
     
 def movimentacao_data():
-    pass
+    data_busca = str(input('Digite a data que deseja encotrar: (dd/mm/yyyy): '))
+
+    if not data_busca: #Verifica se o input do usuário esta Vazio.
+        print('A data nao pode ser vazia.')
+        return
+    
+    resultado = []
+
+    for m in movimentacoes:
+        if data_busca == m["data"]:
+            resultado.append(m)
+
+    if not resultado:
+        print(f'Data {data_busca} nao foi encontrada.\n')
+        return
+
+    tabela = []
+    # percorre resultado gerando numero de linha (i) e a movimentacao (m), contador começa em 1
+    for i, m in enumerate(resultado, start = 1):
+        tabela.append([
+                        i,
+                        m["tipo"],
+                        m["descricao"],
+                        f'R${m["valor"]:.2f}',
+                        m["categoria"],
+                        m["data"]
+        ])
+        
+        cabecalho = ["ID", "Tipo", "Descrição", "Valor", "Categoria", "Data"]
+    
+    print(tabulate(tabela, headers = cabecalho, tablefmt ="grid"))   
+        
+
     
 
 
