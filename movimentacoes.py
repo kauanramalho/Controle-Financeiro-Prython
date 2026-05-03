@@ -100,8 +100,14 @@ def ver_saldo():
 
     print(f'\n-> Valor de Receita Total: R${total_receita:.2f}')
     print(f'-> Valor de Gasto Total: R${total_gasto:.2f}')
-    print(f'-> SALDO TOTAL RESTANTE: R${saldo:.2f}\n')
-    #Atualização: Quando o saldo der negativo, impreimir uma mensagem diferente
+    
+    if saldo > 0:
+        print(f'-> SALDO TOTAL RESTANTE: R${saldo:.2f}\n')
+
+    else:
+        print(f'CUIDADO com seu planejamento, seu saldo esta NEGATIVO!')
+        print(f'-> SALDO NEGATIVO TOTAL : R${saldo:.2f}\n')
+   
 
     
 def gasto_cadegoria():
@@ -109,10 +115,12 @@ def gasto_cadegoria():
     gasto_transporte = 0
     gasto_lazer = 0
     gasto_contas = 0
-    #Atualização: Receitas estou vindo para ca, e sao somadas junto como se fossem gastos
-
+   
     for m in movimentacoes:
-        if m["categoria"] == "Alimetação": #Atualizar: Os valores nao sao somados aqui
+        if m["tipo"] != "Gastos":
+            continue
+
+        if m["categoria"] == "Alimentação": 
             gasto_alimentacao += m["valor"]
 
         elif m["categoria"] == "Transporte":
@@ -124,10 +132,19 @@ def gasto_cadegoria():
         elif m["categoria"] == "Contas":
             gasto_contas += m["valor"]
 
-    print(f'\n-> Total gasto com ALIMENTAÇÃO: R${gasto_alimentacao:.2f}')
-    print(f'-> Total gasto com TRANSPORTE: R${gasto_transporte:.2f}')
-    print(f'-> Total gasto com LAZER: R${gasto_lazer:.2f}')
-    print(f'-> Total gasto com CONTAS: R${gasto_contas:.2f}\n')
+    if (
+    gasto_alimentacao == 0 and
+    gasto_transporte == 0 and
+    gasto_lazer == 0 and
+    gasto_contas == 0
+    ):
+        print("Você ainda nao registou NENHUM Gasto!")
+
+    else:
+        print(f'\n-> Total gasto com ALIMENTAÇÃO: R${gasto_alimentacao:.2f}')
+        print(f'-> Total gasto com TRANSPORTE: R${gasto_transporte:.2f}')
+        print(f'-> Total gasto com LAZER: R${gasto_lazer:.2f}')
+        print(f'-> Total gasto com CONTAS: R${gasto_contas:.2f}\n')
 
     
 def movimentacao_data():
