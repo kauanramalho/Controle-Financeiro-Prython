@@ -1,7 +1,8 @@
+from db.conexao import cursor, conexao
+
 from datetime import datetime
 from tabulate import tabulate 
 
-movimentacoes = []
 categoria = 0
 
 def cadastrar_movimentacoes(tipo):
@@ -51,27 +52,35 @@ def cadastrar_movimentacoes(tipo):
     
     data = str(input('-> Insira a data (dd/mm/yyyy): '))
     if data == "":
-        data = datetime.now().strftime("%d/%m/%Y") 
+        data = datetime.now().strftime("%d-%m-%Y") 
         #Atribui a Data de Hoje se data ficar vazia
     
     print('\nCADASTRO SALVO!')
 
-    movimentacoes.append({"tipo": tipo,
-                         "descricao": descricao,
-                         "valor": valor,
-                         "categoria": categoria, 
-                         "data": data})
+    sql = """
+INSERT INTO movimentacoes
+(tipo, descricao, valor, categoria, data_movimentacao)
+VALUES (%s, %s, %s, %s, %s)
+"""
+
+    valores = (tipo, descricao, valor, categoria, data)
+
+    cursor.execute(sql, valores)
+    conexao.commit()
     
 def listar_movimentacao():
+    cursor.execute("SELECT * FROM movimentacoes") #Busca no Banco SQL
+    dados = cursor.fetchall() # Pega os resultados no banco SQL
+    
     tabela = [] #Tabela para organizar os dados brutos da lista movimentacoes
-    for i, m in enumerate(movimentacoes, start = 1):
+    for i, m in enumerate(dados, start = 1):
         tabela.append([
-                        i,
-                        m["tipo"],
-                        m["descricao"],
-                        f'R${m["valor"]:.2f}',
-                        m["categoria"],
-                        m["data"]
+                        m[0],
+                        m[1],
+                        m[2],
+                        f'R${m[3]:.2f}',
+                        m[4],
+                        m[5]
         ])
 
         cabecalho = ["ID", "Tipo", "Descrição", "Valor(R$)", "Categoria", "Data"]
@@ -83,18 +92,21 @@ def listar_movimentacao():
     # tablefmt = define o formato visual da tabela
 
 def ver_saldo():
+    cursor.execute("SELECT * FROM movimentacoes")
+    dados = cursor.ferchall()
+    
     total_receita = 0
     total_gasto = 0
 
-    for m in movimentacoes:
-        if m["tipo"] == "Receita":
-            total_receita += m["valor"] 
+    for m in dados:
+        if m[1] == "Receita":
+            total_receita += m[3] 
 
-        elif m["tipo"] == "Gastos":
-            total_gasto += m["valor"] 
+        elif m[1] == "Gastos":
+            total_gasto += m[3] 
 
         else:
-            print(f'Tipo invalido encontrado: {m["tipo"]}, Valor: {m["valor"]}')
+            print(f'Tipo invalido encontrado: {m[1]}, Valor: {m[2]}')
 
     saldo = total_receita - total_gasto
 
@@ -107,44 +119,23 @@ def ver_saldo():
     else:
         print(f'CUIDADO com seu planejamento, seu saldo esta NEGATIVO!')
         print(f'-> SALDO NEGATIVO TOTAL : R${saldo:.2f}\n')
-   
-
-    
+     
 def gasto_cadegoria():
-    gasto_alimentacao = 0
-    gasto_transporte = 0
-    gasto_lazer = 0
-    gasto_contas = 0
-   
-    for m in movimentacoes:
-        if m["tipo"] != "Gastos":
-            continue
+    cursor.execute("""
+        SELECT categoria, SUM(valor)
+        FROM movimentacoes
+        WHERE tipo = 'Gastos'
+        GROUP BY categoria
+    """)# Pega os resultados no banco SQL
 
-        if m["categoria"] == "Alimentação": 
-            gasto_alimentacao += m["valor"]
+    resultados = cursor.fetchall() # Pega os resultados no banco SQL
 
-        elif m["categoria"] == "Transporte":
-            gasto_transporte += m["valor"]
+    if not resultados:
+        print("Nenhum gasto registrado.")
+        return
 
-        elif m["categoria"] == "Lazer":
-            gasto_lazer += m["valor"]
-
-        elif m["categoria"] == "Contas":
-            gasto_contas += m["valor"]
-
-    if (
-    gasto_alimentacao == 0 and
-    gasto_transporte == 0 and
-    gasto_lazer == 0 and
-    gasto_contas == 0
-    ):
-        print("Você ainda nao registou NENHUM Gasto!")
-
-    else:
-        print(f'\n-> Total gasto com ALIMENTAÇÃO: R${gasto_alimentacao:.2f}')
-        print(f'-> Total gasto com TRANSPORTE: R${gasto_transporte:.2f}')
-        print(f'-> Total gasto com LAZER: R${gasto_lazer:.2f}')
-        print(f'-> Total gasto com CONTAS: R${gasto_contas:.2f}\n')
+    for categoria, total in resultados:
+        print(f"{categoria}: R${total:.2f}")
 
     
 def movimentacao_data():
@@ -156,9 +147,8 @@ def movimentacao_data():
     
     resultado = []
 
-    for m in movimentacoes:
-        if data_busca == m["data"]:
-            resultado.append(m)
+    if data_busca == m[5]:
+        resultado.append(m)
 
     if not resultado:
         print(f'Data {data_busca} nao foi encontrada.\n')
@@ -169,11 +159,11 @@ def movimentacao_data():
     for i, m in enumerate(resultado, start = 1):
         tabela.append([
                         i,
-                        m["tipo"],
-                        m["descricao"],
-                        f'R${m["valor"]:.2f}',
-                        m["categoria"],
-                        m["data"]
+                        m[1],
+                        m[2],
+                        f'R${m[3]:.2f}',
+                        m[4],
+                        m[5]
         ])
         
         cabecalho = ["ID", "Tipo", "Descrição", "Valor", "Categoria", "Data"]

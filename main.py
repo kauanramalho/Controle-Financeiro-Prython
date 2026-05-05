@@ -1,4 +1,4 @@
-import movimentacoes
+from services import movimentacoes
 
 while True:
     n = 0
