@@ -37,7 +37,7 @@ while True:
         movimentacoes.ver_saldo()
 
     elif n == 5:
-        movimentacoes.gasto_cadegoria()
+        movimentacoes.gasto_categoria()
 
     elif n == 6:
         movimentacoes.movimentacao_data()
@@ -48,5 +48,5 @@ while True:
         break
 
     else:
-        print('Opçao INVALIDA!')
+        print('Opçao INVÁLIDA!')
         print('Digite uma opção valida.')
