@@ -15,6 +15,8 @@ while True:
     print('4 - Ver saldo atual')
     print('5 - Ver gastos por categorias')
     print('6 - Buscar movimentação por data')
+    print('7 - Apagar movimentação COMPLETA')
+    print('8 - Apagar movimentacoes EXPECÍFICAS')
     print('0 - Sair')
     print('==================================')
 
@@ -41,6 +43,12 @@ while True:
 
     elif n == 6:
         movimentacoes.movimentacao_data()
+
+    elif n == 7:
+        movimentacoes.apagar_movimentacoes_completas()
+
+    elif n == 8:
+        movimentacoes.apagar_movimentacoes_expecificas()
 
     elif n == 0:
         print('FINALIZANDO SERVIÇOS.....')

@@ -172,3 +172,66 @@ def movimentacao_data():
         ])
 
     print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
+
+
+def apagar_movimentacoes_completas():
+    cursor.execute("SELECT COUNT(*) FROM movimentacoes")
+    total_registros = cursor.fetchone()[0]
+
+    if total_registros == 0:
+        print("Nenhuma movimentacao cadastrada para apagar.")
+        return
+
+    confirmacao = input(
+        "Tem certeza que deseja apagar TODAS as movimentacoes? (S/N): "
+    ).strip().upper()
+
+    if confirmacao != "S":
+        print("Operacao cancelada.")
+        return
+
+    cursor.execute("DELETE FROM movimentacoes")
+    conexao.commit()
+
+    print(f"{total_registros} movimentacao(oes) apagada(s) com sucesso.")
+
+def apagar_movimentacoes_expecificas():
+    try:
+        id_movimentacao = int(input("Digite o ID da movimentacao que deseja apagar: "))
+    except ValueError:
+        print("Digite um ID numerico valido.")
+        return
+
+    cursor.execute(
+        "SELECT id, tipo, descricao, valor, categoria, data_movimentacao "
+        "FROM movimentacoes WHERE id = %s",
+        (id_movimentacao,),
+    )
+    movimentacao = cursor.fetchone()
+
+    if not movimentacao:
+        print(f"Nenhuma movimentacao foi encontrada com o ID {id_movimentacao}.")
+        return
+
+    print("\nMovimentacao encontrada:")
+    tabela = [[
+        movimentacao[0],
+        movimentacao[1],
+        movimentacao[2],
+        f"R${movimentacao[3]:.2f}",
+        movimentacao[4],
+        movimentacao[5],
+    ]]
+    cabecalho = ["ID", "Tipo", "Descricao", "Valor", "Categoria", "Data"]
+    print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
+
+    confirmacao = input("Confirmar exclusao desta movimentacao? (S/N): ").strip().upper()
+
+    if confirmacao != "S":
+        print("Operacao cancelada.")
+        return
+
+    cursor.execute("DELETE FROM movimentacoes WHERE id = %s", (id_movimentacao,))
+    conexao.commit()
+
+    print("Movimentacao apagada com sucesso.")
