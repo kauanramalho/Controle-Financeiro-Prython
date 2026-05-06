@@ -110,7 +110,7 @@ controle_financeiro/
 
 ---
 
-## 🧠 Estrutura do Banco de Dados (Pode sofrer mudanças futuras)
+## 🧠 Estrutura do Banco de Dados MySQL
 
 Tabela principal:
 
@@ -138,7 +138,8 @@ CREATE TABLE movimentacoes (
 4 - Ver saldo atual
 5 - Ver gastos por categoria
 6 - Buscar movimentação por data
-7 - Apagar movimentação
+7 - Apagar movimentação COMPLETA
+8- Apagar movimentação ESPECÍFICA
 0 - Sair
 ```
 
@@ -150,7 +151,7 @@ CREATE TABLE movimentacoes (
 +----+---------+-------------+-------+-------------+------------+
 | ID | Tipo    | Descrição   | Valor | Categoria   | Data       |
 +----+---------+-------------+-------+-------------+------------+
-| 1  | Gasto   | Lanche      | 25.00 | Alimentação | 29/04/2026 |
+| 1  | Gasto   | Lanche      | 25.00 | Alimentação | 2026/04/23 |
 +----+---------+-------------+-------+-------------+------------+
 ```
 
@@ -182,7 +183,6 @@ Este projeto foi desenvolvido com o objetivo de praticar:
 
 * Interface gráfica (GUI)
 * API com Flask ou FastAPI
-* Integração com banco de dados remoto (MySQL/PostgreSQL)
 * Autenticação de usuários
 * Dashboard interativo
 
