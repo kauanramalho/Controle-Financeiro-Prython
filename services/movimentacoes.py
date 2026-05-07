@@ -5,6 +5,20 @@ from tabulate import tabulate
 from db.conexao import conexao, cursor
 
 
+def formatar_data_para_banco(data_texto):
+    return datetime.strptime(data_texto, "%d-%m-%Y").strftime("%Y-%m-%d")
+
+
+def formatar_data_para_exibicao(data_valor):
+    if isinstance(data_valor, str):
+        try:
+            data_valor = datetime.strptime(data_valor, "%Y-%m-%d")
+        except ValueError:
+            return data_valor
+
+    return data_valor.strftime("%d-%m-%Y")
+
+
 def cadastrar_movimentacoes(tipo):
     print("--------------------")
     print("Categoria")
@@ -53,10 +67,16 @@ def cadastrar_movimentacoes(tipo):
             print("Valor invalido. Digite apenas numeros!")
             return
 
-    data = input("-> Insira a data (yyyy-mm-dd): ")
+    data = input("-> Insira a data (dd-mm-yyyy): ").strip()
 
     if data == "":
         data = datetime.now().strftime("%Y-%m-%d")
+    else:
+        try:
+            data = formatar_data_para_banco(data)
+        except ValueError:
+            print("Data invalida. Use o formato dd-mm-yyyy.")
+            return
 
     sql = """
 INSERT INTO movimentacoes
@@ -90,7 +110,7 @@ def listar_movimentacao():
             m[2],
             f"R${m[3]:.2f}",
             m[4],
-            m[5],
+            formatar_data_para_exibicao(m[5]),
         ])
 
     print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
@@ -142,15 +162,21 @@ def gasto_categoria():
 
 
 def movimentacao_data():
-    data_busca = input("Digite a data que deseja encontrar (yyyy-mm-dd): ")
+    data_busca = input("Digite a data que deseja encontrar (dd-mm-yyyy): ").strip()
 
     if not data_busca:
         print("A data nao pode ser vazia.")
         return
 
+    try:
+        data_busca_banco = formatar_data_para_banco(data_busca)
+    except ValueError:
+        print("Data invalida. Use o formato dd-mm-yyyy.")
+        return
+
     cursor.execute(
         "SELECT * FROM movimentacoes WHERE data_movimentacao = %s",
-        (data_busca,),
+        (data_busca_banco,),
     )
     resultado = cursor.fetchall()
 
@@ -168,7 +194,7 @@ def movimentacao_data():
             m[2],
             f"R${m[3]:.2f}",
             m[4],
-            m[5],
+            formatar_data_para_exibicao(m[5]),
         ])
 
     print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
@@ -191,6 +217,7 @@ def apagar_movimentacoes_completas():
         return
 
     cursor.execute("DELETE FROM movimentacoes")
+    cursor.execute("ALTER TABLE movimentacoes AUTO_INCREMENT = 1")
     conexao.commit()
 
     print(f"{total_registros} movimentacao(oes) apagada(s) com sucesso.")
@@ -220,7 +247,7 @@ def apagar_movimentacoes_expecificas():
         movimentacao[2],
         f"R${movimentacao[3]:.2f}",
         movimentacao[4],
-        movimentacao[5],
+        formatar_data_para_exibicao(movimentacao[5]),
     ]]
     cabecalho = ["ID", "Tipo", "Descricao", "Valor", "Categoria", "Data"]
     print(tabulate(tabela, headers=cabecalho, tablefmt="grid"))
